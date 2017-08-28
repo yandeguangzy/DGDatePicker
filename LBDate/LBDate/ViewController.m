@@ -41,8 +41,8 @@
         }];
         //指定显示样式
         _mDatePickerView.lbPickerViewType = LB_YEAR_MONTH_DAY_HOURS_MINUTES;
-        _mDatePickerView.minTime = @"2000-1-1 00:00";
-        _mDatePickerView.maxTime = @"2020-12-31 00:00";
+        _mDatePickerView.minTime = @"2000-01-01 00:00";
+        _mDatePickerView.maxTime = @"2030-12-31 23:59";
         
         
     }
@@ -50,7 +50,7 @@
 }
 
 - (void) textFieldDidBeginEditing:(UITextField *)textField{
-    self.mDatePickerView.showDate = [[NSDate date] dateToString];
+    self.mDatePickerView.showDate = @"2017-08-28 10:26";//[[NSDate date] dateToString];
 }
 
 

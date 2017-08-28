@@ -76,6 +76,9 @@
         case LB_YEAR_MONTH_DAY_HOURS_MINUTES:
             self.outDataFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
             break;
+        case LB_CreditCard_MONTH_YEAR:
+            self.outDataFormatter.dateFormat = @"yyyy-MM";
+            break;
         default:
             break;
     }
@@ -164,7 +167,9 @@
         case LB_YEAR_MONTH_DAY_HOURS_MINUTES:
             return 5;
             break;
-            
+        case LB_CreditCard_MONTH_YEAR:
+            return 2;
+            break;
         default:
             return 0;
             break;
@@ -174,9 +179,17 @@
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
     switch (component) {
         case 0:
-            return [self.years count];
+            if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+                return [self.months count];
+            }else{
+               return [self.years count];
+            }
         case 1:
-            return [self.months count];
+            if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+                return [self.years count];
+            }else{
+                return [self.months count];
+            }
         case 2:
             return [self.days count];
         case 3:
@@ -192,10 +205,17 @@
 - (NSString *) pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     switch (component) {
         case 0:
-            return [self.years[row] stringByAppendingString:@"年"];
+            if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+                return [self.months[row] stringByAppendingString:@"月"];
+            }else{
+                return [self.years[row] stringByAppendingString:@"年"];
+            }
         case 1:
-            return [self.months[row] stringByAppendingString:@"月"];
-        case 2:
+            if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+                return [self.years[row] stringByAppendingString:@"年"];
+            }else{
+                return [self.months[row] stringByAppendingString:@"月"];
+            }        case 2:
             return [self.days[row] stringByAppendingString:@"日"];
         case 3:
             return [self.hours[row]stringByAppendingString:@"时"];
@@ -224,11 +244,21 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     switch (component) {
         case 0:
-            SYear = [[self.years objectAtIndex:[pickerView selectedRowInComponent:0]] integerValue];
-            [pickerView reloadComponent:1];
+            if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+                SMonth = [[self.months objectAtIndex:[pickerView selectedRowInComponent:0]] integerValue];
+            }else{
+                SYear = [[self.years objectAtIndex:[pickerView selectedRowInComponent:0]] integerValue];
+                [pickerView reloadComponent:1];
+            }
         case 1:
-            SMonth = [[self.months objectAtIndex:[pickerView selectedRowInComponent:1]] integerValue];
-            [pickerView reloadComponent:2];
+            if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+                SYear = [[self.years objectAtIndex:[pickerView selectedRowInComponent:1]] integerValue];
+                break;
+            }else{
+                SMonth = [[self.months objectAtIndex:[pickerView selectedRowInComponent:1]] integerValue];
+                [pickerView reloadComponent:2];
+            }
+            
         case 2:
             if(_lbPickerViewType == LB_YEAR_MONTH_DAY_HOURS_MINUTES){
                 SDay = [[self.days objectAtIndex:[pickerView selectedRowInComponent:2]] integerValue];
@@ -375,6 +405,10 @@
         }
     }
     
+    if(self.lbPickerViewType == LB_CreditCard_MONTH_YEAR){
+        return;
+    }
+    
     [self.mPickerView reloadComponent:2];
     for (int d = 0; d < self.days.count; d++) {
         if([self.days[d] integerValue] == [NDate day]){
@@ -406,11 +440,14 @@
 
 - (void) setResultLableText{
     switch (_lbPickerViewType) {
-        case 0:
+        case LB_YEAR_MONTH_DAY:
             self.resultLabel.text = [NSString stringWithFormat:@"%04ld-%02ld-%02ld",SYear,SMonth,SDay];
             break;
-        case 1:
+        case LB_YEAR_MONTH_DAY_HOURS_MINUTES:
             self.resultLabel.text = [NSString stringWithFormat:@"%04ld-%02ld-%02ld %02ld:%@",SYear,SMonth,SDay,SHours,[self.minutes objectAtIndex:[self.mPickerView selectedRowInComponent:4]]];
+            break;
+        case LB_CreditCard_MONTH_YEAR:
+            self.resultLabel.text = [NSString stringWithFormat:@"%02ld/%@",SMonth,[[NSString stringWithFormat:@"%04ld",SYear] substringFromIndex:2]];
             break;
         default:
             break;

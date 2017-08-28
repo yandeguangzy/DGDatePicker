@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, LBPickerViewType) {
-    LB_YEAR_MONTH_DAY                           =0,
-    LB_YEAR_MONTH_DAY_HOURS_MINUTES
+    LB_YEAR_MONTH_DAY                           =0,         //@"yyyy-MM-dd";
+    LB_YEAR_MONTH_DAY_HOURS_MINUTES,                        //@"yyyy-MM-dd HH:mm";
+    LB_CreditCard_MONTH_YEAR                                //信用卡有效期选择yyyy-MM
 };
 
 

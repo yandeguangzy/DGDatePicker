@@ -253,6 +253,7 @@
         case 1:
             if(_lbPickerViewType == LB_CreditCard_MONTH_YEAR){
                 SYear = [[self.years objectAtIndex:[pickerView selectedRowInComponent:1]] integerValue];
+                [pickerView reloadComponent:0];
                 break;
             }else{
                 SMonth = [[self.months objectAtIndex:[pickerView selectedRowInComponent:1]] integerValue];
